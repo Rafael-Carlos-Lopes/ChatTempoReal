@@ -10,6 +10,8 @@
         return console.error(err);
     });
 
+
+
     connection.on("newMessage", function (messageView) {
         var isMine = messageView.fromUserName === viewModel.myProfile().userName();
         var message = new ChatMessage(messageView.id, messageView.content, messageView.timestamp, messageView.fromUserName, messageView.fromFullName, isMine, messageView.avatar);
@@ -186,8 +188,7 @@
                         result[i].fullName,
                         result[i].avatar,
                         result[i].currentRoom,
-                        result[i].status,
-                        result[i].device
+                        result[i].status
                     ))
                 }
             });
@@ -332,15 +333,15 @@
         self.device = ko.observable(device);
     }
 
-    function UserChat(id, userName, fullName, avatar, currentRoom, device) {
+    function UserChat(id, userName, fullName, avatar, currentRoom, status) {
         var self = this;
         self.id = ko.observable(id);
         self.userName = ko.observable(userName);
         self.fullName = ko.observable(fullName);
         self.avatar = ko.observable(avatar);
         self.currentRoom = ko.observable(currentRoom);
+        self.status = ko.observable(status);   
     }
-
 
     function ChatMessage(id, content, timestamp, fromUserName, fromFullName, isMine, avatar) {
         var self = this;

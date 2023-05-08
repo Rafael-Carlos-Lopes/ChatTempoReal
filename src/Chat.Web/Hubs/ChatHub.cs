@@ -2,6 +2,7 @@
 using Chat.Web.Data;
 using Chat.Web.Models;
 using Chat.Web.ViewModels;
+using ChatTempoReal.Web.Enum;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -66,8 +67,6 @@ namespace Chat.Web.Hubs
                         await _context.Messages.AddAsync(msg);
                         await _context.SaveChangesAsync();
 
-
-
                         // Send the message
                         await Clients.Client(userId).SendAsync("newMessage", messageViewModel);
                         await Clients.Caller.SendAsync("newMessage", messageViewModel);
@@ -76,7 +75,6 @@ namespace Chat.Web.Hubs
             }
             catch (Exception ex)
             {
-
                 throw ex;
             }
 
@@ -128,14 +126,11 @@ namespace Chat.Web.Hubs
                 Avatar = user.Avatar,
                 UserName = user.UserName,
                 FullName = user.FullName,
-                Status = _Connections.Exists(x => x.Id == user.Id) ? "Verde" : "Preto",
+                Status =  GetStatus(user.Id),
             }).ToList();
          
             return userViewModel;
         }
-
-
-
 
         public override Task OnConnectedAsync()
         {
@@ -195,5 +190,8 @@ namespace Chat.Web.Hubs
 
             return "Web";
         }
+
+        private  string GetStatus(string userId)
+           => _Connections.Exists(x => x.Id == userId) ? UserStatus.Disponivel : UserStatus.Indisponivel;
     }
 }

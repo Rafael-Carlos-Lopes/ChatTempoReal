@@ -13,11 +13,11 @@
         input.val(text);
         input.change();
         input.focus();
-
        
-        //$('#joinedRoom').text(username);
-    });
+        $('#joinedRoom').text(username);
+        $(".messages-container").empty();
 
+    });
 
 
 
