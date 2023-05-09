@@ -1,5 +1,8 @@
 ﻿$(function () {
     $('ul#users-list').on('click', 'li', function () {
+        $(".messages-container").empty();
+
+
         var username = $(this).data("username");
         var input = $('#message-input');
 
@@ -15,8 +18,16 @@
         input.focus();
        
         $('#joinedRoom').text(username);
-        $(".messages-container").empty();
+        
+    });
 
+
+
+    $('#btn-send-message').click(() => {
+        var id = $('.user-info').attr('id');
+        alert(id);
+        console.log(id);
+        sendNewMessage(id);
     });
 
 

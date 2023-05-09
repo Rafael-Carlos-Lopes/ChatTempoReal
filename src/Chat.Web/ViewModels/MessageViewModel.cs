@@ -11,7 +11,7 @@ namespace Chat.Web.ViewModels
         public DateTime Timestamp { get; set; }
         public string FromUserName { get; set; }
         public string FromFullName { get; set; }
-        [Required]
+      
         public string Room { get; set; }
         public string Avatar { get; set; }
 

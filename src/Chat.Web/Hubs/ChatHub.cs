@@ -106,6 +106,35 @@ namespace Chat.Web.Hubs
             }
         }
 
+        public async Task JoinPrivateChat(string roomId)
+        {
+            try
+            {
+                var Emissor = _Connections.Where(u => u.UserName == IdentityName).FirstOrDefault();
+                var destinatario = _Connections.Where(u => u.Id == roomId).FirstOrDefault();
+                if (Emissor != null)
+                {
+                    // Remove user from others list
+                    if (!string.IsNullOrEmpty(Emissor.CurrentRoom))
+                        await Clients.OthersInGroup(Emissor.CurrentRoom).SendAsync("removeUser", Emissor);
+
+                    // Join to new chat room
+                    await Leave(Emissor.CurrentRoom);
+                    await Groups.AddToGroupAsync(Context.ConnectionId, destinatario.Id);
+                    Emissor.CurrentRoom = destinatario.Id;
+
+                    // Tell others to update their list of users
+                    await Clients.OthersInGroup(destinatario.Id).SendAsync("addUser", Emissor);
+
+                   // await Clients.Client(connection).SendAsync("Receive", chat.from, chat.message);
+                }
+            }
+            catch (Exception ex)
+            {
+                await Clients.Caller.SendAsync("onError", "You failed to join the chat room!" + ex.Message);
+            }
+        }
+
         public async Task Leave(string roomName)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, roomName);

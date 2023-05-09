@@ -13,6 +13,7 @@ using Chat.Web.Hubs;
 using Chat.Web.ViewModels;
 using System.Text.RegularExpressions;
 using Microsoft.AspNetCore.Identity;
+using Chat.Web.Data.Migrations;
 
 namespace Chat.Web.Controllers
 {
@@ -25,6 +26,7 @@ namespace Chat.Web.Controllers
         private readonly IMapper _mapper;
         private readonly IHubContext<ChatHub> _hubContext;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly static Dictionary<string, string> _ConnectionsMap = new Dictionary<string, string>();
 
         public MessagesController(ApplicationDbContext context,
             IMapper mapper,
@@ -74,10 +76,10 @@ namespace Chat.Web.Controllers
         public async Task<ActionResult<Message>> Create(MessageViewModel viewModel)
         {
             var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            
-            var room = _context.Rooms.FirstOrDefault(r => r.Name == viewModel.Room);
 
-            //viewModel.ToUserId = user.
+            
+
+            var room = _context.Rooms.FirstOrDefault(r => r.Name == viewModel.Room);
 
             if (room == null)
                 return BadRequest();
@@ -96,6 +98,34 @@ namespace Chat.Web.Controllers
             // Broadcast the message
             var createdMessage = _mapper.Map<Message, MessageViewModel>(msg);
             await _hubContext.Clients.Group(room.Name).SendAsync("newMessage", createdMessage);
+
+            return CreatedAtAction(nameof(Get), new { id = msg.Id }, createdMessage);
+        }
+
+        [HttpPost("privado")]
+        public async Task<ActionResult<Message>> CreatePrivate(MessageViewModel viewModel)
+        {
+            var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+
+            _ConnectionsMap.TryGetValue(viewModel.ToUserId, out string userId);
+
+            var toUser = _context.Users.FirstOrDefault(u => u.UserName == viewModel.ToUserId);
+
+            if (toUser == null)
+                return BadRequest();
+
+            var msg = new Message()
+            {
+                Content = Regex.Replace(viewModel.Content, @"<.*?>", string.Empty),
+                FromUser = fromUser,
+                Timestamp = DateTime.Now
+            };
+
+            _context.Messages.Add(msg);
+            await _context.SaveChangesAsync();
+
+            var createdMessage = _mapper.Map<Message, MessageViewModel>(msg);
+            await _hubContext.Clients.Client(toUser.Id).SendAsync("newMessage", createdMessage);
 
             return CreatedAtAction(nameof(Get), new { id = msg.Id }, createdMessage);
         }

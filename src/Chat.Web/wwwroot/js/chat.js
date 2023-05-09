@@ -115,12 +115,13 @@
         });
 
 
-        self.sendNewMessage = function () {
+        self.sendNewMessage = function (userId) {
             var text = self.message();
             if (text.startsWith("/")) {
-                var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
+                var receiver = userId;
                 var message = text.substring(text.indexOf(")") + 1, text.length);
-                self.sendPrivate(receiver, message);
+               self.sendPrivate(receiver, message);
+               // self.sendToPrivacyRoom(receiver, message);
             }
             else {
                 self.sendToRoom(self.joinedRoom(), self.message());
@@ -139,6 +140,17 @@
             }
         }
 
+        //self.sendToPrivacyRoom = function (receiver, message) {
+        //    if (receiver.length > 0 && message.length > 0) {
+        //        fetch('/api/Messages/privado', {
+        //            method: 'POST',
+        //            headers: { 'Content-Type': 'application/json' },
+        //            body: JSON.stringify({ ToUserId: receiver, content: message })
+        //        });
+        //    }
+        //}
+
+
         self.sendPrivate = function (receiver, message) {
             if (receiver.length > 0 && message.length > 0) {
                 connection.invoke("SendPrivate", receiver.trim(), message.trim());
@@ -152,6 +164,15 @@
                 self.messageHistory();
             });
         }
+
+
+        self.joinpPrivateRoom = function (room) {
+            connection.invoke("JoinPrivateChat", room.id()).then(function () {
+               // self.messageHistory();
+            });
+        }
+
+
 
         self.roomList = function () {
             fetch('/api/Rooms')
