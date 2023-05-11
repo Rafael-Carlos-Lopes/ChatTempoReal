@@ -72,12 +72,28 @@ namespace Chat.Web.Controllers
             return Ok(messagesViewModel);
         }
 
+        [HttpGet("Private/{userId}")]
+        public IActionResult GetPrivateMessages(string userId )
+        {
+            var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
+            var toUser = _context.Users.FirstOrDefault(u => u.Id == userId); ;
+            
+            var messages = _context.Messages.Where(m => m.ToUserId == fromUser.Id && m.ToUserId == userId)
+                .OrderByDescending(m => m.Timestamp)
+                .Take(20)
+                .AsEnumerable()
+                .Reverse()
+                .ToList();
+
+            var messagesViewModel = _mapper.Map<IEnumerable<Message>, IEnumerable<MessageViewModel>>(messages);
+
+            return Ok(messagesViewModel);
+        }
+
         [HttpPost]
         public async Task<ActionResult<Message>> Create(MessageViewModel viewModel)
         {
             var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-
-            
 
             var room = _context.Rooms.FirstOrDefault(r => r.Name == viewModel.Room);
 
@@ -109,7 +125,7 @@ namespace Chat.Web.Controllers
 
             _ConnectionsMap.TryGetValue(viewModel.ToUserId, out string userId);
 
-            var toUser = _context.Users.FirstOrDefault(u => u.UserName == viewModel.ToUserId);
+            var toUser = _context.Users.FirstOrDefault(u => u.Id == userId);
 
             if (toUser == null)
                 return BadRequest();
@@ -118,6 +134,7 @@ namespace Chat.Web.Controllers
             {
                 Content = Regex.Replace(viewModel.Content, @"<.*?>", string.Empty),
                 FromUser = fromUser,
+                ToUser = toUser,
                 Timestamp = DateTime.Now
             };
 

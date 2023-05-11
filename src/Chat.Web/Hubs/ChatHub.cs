@@ -42,6 +42,8 @@ namespace Chat.Web.Hubs
                     var fromUser = _context.Users.FirstOrDefault(u => u.Id == sender.Id);
                     var toUser = _context.Users.FirstOrDefault(u => u.UserName == receiverName);
 
+                    await Leave(sender.CurrentRoom);
+
                     if (!string.IsNullOrEmpty(message.Trim()))
                     {
                         // Build the message
@@ -62,7 +64,6 @@ namespace Chat.Web.Hubs
                             ToUserId = toUser.Id,
                             Timestamp = DateTime.Now
                         };
-
 
                         await _context.Messages.AddAsync(msg);
                         await _context.SaveChangesAsync();

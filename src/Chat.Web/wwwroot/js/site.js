@@ -1,6 +1,6 @@
 ﻿$(function () {
     $('ul#users-list').on('click', 'li', function () {
-        $(".messages-container").empty();
+        
 
 
         var username = $(this).data("username");
@@ -23,12 +23,9 @@
 
 
 
-    $('#btn-send-message').click(() => {
-        var id = $('.user-info').attr('id');
-        alert(id);
-        console.log(id);
-        sendNewMessage(id);
-    });
+    //$('#btn-send-message').click(() => {
+    //    messageHistory();
+    //});
 
 
 

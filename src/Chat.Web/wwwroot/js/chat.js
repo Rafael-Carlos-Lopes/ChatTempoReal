@@ -10,12 +10,11 @@
         return console.error(err);
     });
 
-
-
     connection.on("newMessage", function (messageView) {
         var isMine = messageView.fromUserName === viewModel.myProfile().userName();
         var message = new ChatMessage(messageView.id, messageView.content, messageView.timestamp, messageView.fromUserName, messageView.fromFullName, isMine, messageView.avatar);
         viewModel.chatMessages.push(message);
+        console.log("newMessage");
         $(".messages-container").animate({ scrollTop: $(".messages-container")[0].scrollHeight }, 1000);
     });
 
@@ -115,13 +114,31 @@
         });
 
 
-        self.sendNewMessage = function (userId) {
+        //self.sendNewMessage = function () {
+        //    var text = self.message();
+        //    if (text.startsWith("/")) {
+        //        var userId = $('.user-info').attr('id')
+        //        var receiver = userId;
+        //        var message = text.substring(text.indexOf(")") + 1, text.length);
+        //        self.sendPrivate(receiver, message);
+        //        self.messageHistoryPrivate()
+        //       // self.sendToPrivacyRoom(receiver, message);
+        //    }
+        //    else {
+        //        self.sendToRoom(self.joinedRoom(), self.message());
+        //    }
+
+        //    self.message("");
+        //}
+
+
+        self.sendNewMessage = function () {
             var text = self.message();
             if (text.startsWith("/")) {
-                var receiver = userId;
+                var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
                 var message = text.substring(text.indexOf(")") + 1, text.length);
-               self.sendPrivate(receiver, message);
-               // self.sendToPrivacyRoom(receiver, message);
+                self.sendPrivate(receiver, message);
+                self.messageHistoryPrivate()
             }
             else {
                 self.sendToRoom(self.joinedRoom(), self.message());
@@ -129,6 +146,8 @@
 
             self.message("");
         }
+
+    
 
         self.sendToRoom = function (room, message) {
             if (room.name()?.length > 0 && message.length > 0) {
@@ -140,15 +159,15 @@
             }
         }
 
-        //self.sendToPrivacyRoom = function (receiver, message) {
-        //    if (receiver.length > 0 && message.length > 0) {
-        //        fetch('/api/Messages/privado', {
-        //            method: 'POST',
-        //            headers: { 'Content-Type': 'application/json' },
-        //            body: JSON.stringify({ ToUserId: receiver, content: message })
-        //        });
-        //    }
-        //}
+        self.sendToPrivacyRoom = function (receiver, message) {
+            if (receiver.length > 0 && message.length > 0) {
+                fetch('/api/Messages/privado', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ToUserId: receiver, content: message })
+                });
+            }
+        }
 
 
         self.sendPrivate = function (receiver, message) {
@@ -164,15 +183,6 @@
                 self.messageHistory();
             });
         }
-
-
-        self.joinpPrivateRoom = function (room) {
-            connection.invoke("JoinPrivateChat", room.id()).then(function () {
-               // self.messageHistory();
-            });
-        }
-
-
 
         self.roomList = function () {
             fetch('/api/Rooms')
@@ -273,6 +283,26 @@
                 });
         }
 
+        self.messageHistoryPrivate = function () {
+            fetch('/api/Messages/private/' + $('.user-info').attr('id'))
+                .then(response => response.json())
+                .then(data => {
+                    self.chatMessages.removeAll();
+                    for (var i = 0; i < data.length; i++) {
+                        var isMine = data[i].fromUserName == self.myProfile().userName();
+                        self.chatMessages.push(new ChatMessage(data[i].id,
+                            data[i].content,
+                            data[i].timestamp,
+                            data[i].fromUserName,
+                            data[i].fromFullName,
+                            isMine,
+                            data[i].avatar))
+                    }
+
+                    $(".messages-container").animate({ scrollTop: $(".messages-container")[0].scrollHeight }, 1000);
+                });
+        }
+
         self.roomAdded = function (room) {
             self.chatRooms.push(room);
         }
@@ -354,15 +384,15 @@
         self.device = ko.observable(device);
     }
 
-    function UserChat(id, userName, fullName, avatar, currentRoom, status) {
+    function UserChat(id, userName, fullName, avatar, currentRoom, device) {
         var self = this;
         self.id = ko.observable(id);
         self.userName = ko.observable(userName);
         self.fullName = ko.observable(fullName);
         self.avatar = ko.observable(avatar);
         self.currentRoom = ko.observable(currentRoom);
-        self.status = ko.observable(status);   
     }
+
 
     function ChatMessage(id, content, timestamp, fromUserName, fromFullName, isMine, avatar) {
         var self = this;
