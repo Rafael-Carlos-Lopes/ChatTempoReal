@@ -43,7 +43,7 @@
                     <div class="user">
                         <span class="avatar me-2 text-uppercase" data-bind="visible: avatar() == null, text: fullName()[0]"></span>
                         <img class="avatar me-2" data-bind="visible: avatar() != null, attr: { src: avatar() != null ? '/avatars/' + avatar() : '' }" />
-                        <div class="user-info" data-bind="attr: {id: id}">
+                        <div class="user-info" data-bind="attr: {id: id}, click: $parent.messageHistoryPrivate.bind($data)">
                             <span class="name" data-bind="text: fullName"></span>
                         </div>
                     </div>
