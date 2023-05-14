@@ -283,8 +283,9 @@
                 });
         }
 
-        self.messageHistoryPrivate = function (user) {
-            fetch('/api/Messages/private/' + (user === undefined ? $('.user-info').attr('id') : user.id))
+        self.messageHistoryPrivate = function (user,id) {
+            var x = (id === undefined ? $('.user-info').attr('id') : id.currentTarget.id)
+            fetch('/api/Messages/private/' + (id === undefined ? $('.user-info').attr('id') : id.currentTarget.id) )
                 .then(response => response.json())
                 .then(data => {
                     self.chatMessages.removeAll();

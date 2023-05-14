@@ -78,7 +78,7 @@ namespace Chat.Web.Controllers
             var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
             var toUser = _context.Users.FirstOrDefault(u => u.Id == userId); ;
             
-            var messages = _context.Messages.Where(m => m.ToUserId == fromUser.Id && m.ToUserId == userId)
+            var messages = _context.Messages.Where(m => m.FromUserId == fromUser.Id && m.ToUserId == userId)
                 .OrderByDescending(m => m.Timestamp)
                 .Take(20)
                 .AsEnumerable()
