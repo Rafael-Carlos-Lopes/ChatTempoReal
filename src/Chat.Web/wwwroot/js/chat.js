@@ -1,6 +1,16 @@
 ﻿$(document).ready(function () {
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
+    var x;
+
+    $('ul#users-list').on('click', 'li', function () {
+
+  
+        x = $('.user-info').attr('id')
+
+    });
+
+
     connection.start().then(function () {
         console.log('SignalR Started...')
         viewModel.roomList();
@@ -19,7 +29,7 @@
     });
 
     connection.on("getProfileInfo", function (user) {
-        viewModel.myProfile(new ProfileInfo(user.userName, user.fullName, user.avatar));
+        viewModel.myProfile(new ProfileInfo(user.id, user.userName, user.fullName, user.avatar));
         viewModel.isLoading(false);
     });
 
@@ -113,31 +123,13 @@
             }
         });
 
-
-        //self.sendNewMessage = function () {
-        //    var text = self.message();
-        //    if (text.startsWith("/")) {
-        //        var userId = $('.user-info').attr('id')
-        //        var receiver = userId;
-        //        var message = text.substring(text.indexOf(")") + 1, text.length);
-        //        self.sendPrivate(receiver, message);
-        //        self.messageHistoryPrivate()
-        //       // self.sendToPrivacyRoom(receiver, message);
-        //    }
-        //    else {
-        //        self.sendToRoom(self.joinedRoom(), self.message());
-        //    }
-
-        //    self.message("");
-        //}
-
-
         self.sendNewMessage = function () {
             var text = self.message();
             if (text.startsWith("/")) {
-                var receiver = text.substring(text.indexOf("(") + 1, text.indexOf(")"));
+                var sender = $('.senderId').attr('id');;
+                var receiver = x;
                 var message = text.substring(text.indexOf(")") + 1, text.length);
-                self.sendPrivate(receiver, message);
+                self.sendPrivate(sender, receiver, message);
                 self.messageHistoryPrivate()
             }
             else {
@@ -146,8 +138,6 @@
 
             self.message("");
         }
-
-    
 
         self.sendToRoom = function (room, message) {
             if (room.name()?.length > 0 && message.length > 0) {
@@ -170,10 +160,8 @@
         }
 
 
-        self.sendPrivate = function (receiver, message) {
-            if (receiver.length > 0 && message.length > 0) {
-                connection.invoke("SendPrivate", receiver.trim(), message.trim());
-            }
+        self.sendPrivate = function (sender, receiver, message) {
+                connection.invoke("SendPrivate", sender, receiver, message.trim());
         }
 
         self.joinRoom = function (room) {
@@ -283,7 +271,7 @@
                 });
         }
 
-        self.messageHistoryPrivate = function (user,id) {
+        self.messageHistoryPrivate = function (user, id) {
             var x = (id === undefined ? $('.user-info').attr('id') : id.currentTarget.id)
             fetch('/api/Messages/private/' + (id === undefined ? $('.user-info').attr('id') : id.currentTarget.id) )
                 .then(response => response.json())
@@ -428,8 +416,9 @@
         self.avatar = ko.observable(avatar);
     }
 
-    function ProfileInfo(userName, fullName, avatar) {
+    function ProfileInfo(id,userName, fullName, avatar) {
         var self = this;
+        self.id = ko.observable(id);
         self.userName = ko.observable(userName);
         self.fullName = ko.observable(fullName);
         self.avatar = ko.observable(avatar);

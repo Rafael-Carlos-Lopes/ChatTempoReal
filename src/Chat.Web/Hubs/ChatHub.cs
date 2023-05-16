@@ -30,17 +30,15 @@ namespace Chat.Web.Hubs
             _mapper = mapper;
         }
 
-        public async Task SendPrivate(string receiverName, string message)
+        public async Task SendPrivate(string senderId, string receiverName, string message)
         {
             try
             {
-                if (_ConnectionsMap.TryGetValue(receiverName, out string userId))
-                {
                     // Who is the sender;
-                    var sender = _Connections.Where(u => u.UserName == IdentityName).First();
+                    var sender = _Connections.Where(u => u.Id == senderId).First();
 
                     var fromUser = _context.Users.FirstOrDefault(u => u.Id == sender.Id);
-                    var toUser = _context.Users.FirstOrDefault(u => u.UserName == receiverName);
+                    var toUser = _context.Users.FirstOrDefault(u => u.Id == receiverName);
 
                     await Leave(sender.CurrentRoom);
 
@@ -69,10 +67,9 @@ namespace Chat.Web.Hubs
                         await _context.SaveChangesAsync();
 
                         // Send the message
-                        await Clients.Client(userId).SendAsync("newMessage", messageViewModel);
+                        await Clients.Client(toUser.Id).SendAsync("newMessage", messageViewModel);
                         await Clients.Caller.SendAsync("newMessage", messageViewModel);
                     }
-                }
             }
             catch (Exception ex)
             {

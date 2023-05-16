@@ -54,7 +54,7 @@
             <div class="d-flex align-items-center flex-grow-1">
                 <span class="avatar me-2 text-uppercase" data-bind="visible: !showAvatar(), text: myProfile()?.fullName()[0]"></span>
                 <img class="avatar me-2" data-bind="visible: showAvatar(), attr: { src: showAvatar() ? '/avatars/' + myProfile()?.avatar() : '' }" />
-                <a data-bind="text: myProfile()?.fullName()"></a>
+                <a class="senderId" data-bind="text: myProfile()?.fullName(), attr: {id: myProfile()?.id()}"></a>
             </div>
             <div>
                 <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="/" method="post">

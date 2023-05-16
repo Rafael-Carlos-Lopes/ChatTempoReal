@@ -1,7 +1,5 @@
 ﻿$(function () {
     $('ul#users-list').on('click', 'li', function () {
-        
-
 
         var username = $(this).data("username");
         var input = $('#message-input');
@@ -18,15 +16,10 @@
         input.focus();
        
         $('#joinedRoom').text(username);
+
+      var x = $('.user-info').attr('id')
         
     });
-
-
-
-    //$('#btn-send-message').click(() => {
-    //    messageHistory();
-    //});
-
 
 
     $('#emojis-container').on('click', 'button', function () {
