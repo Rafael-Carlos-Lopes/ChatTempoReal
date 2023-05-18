@@ -4,7 +4,6 @@
         var username = $(this).data("username");
         var input = $('#message-input');
 
-
         var text = input.val();
         if (text.startsWith("/")) {
             text = text.split(")")[1];
@@ -17,9 +16,9 @@
        
         $('#joinedRoom').text(username);
 
-      var x = $('.user-info').attr('id')
-        
     });
+
+
 
 
     $('#emojis-container').on('click', 'button', function () {

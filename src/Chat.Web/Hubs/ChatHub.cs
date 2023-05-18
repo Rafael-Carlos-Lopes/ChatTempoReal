@@ -34,42 +34,39 @@ namespace Chat.Web.Hubs
         {
             try
             {
-                    // Who is the sender;
-                    var sender = _Connections.Where(u => u.Id == senderId).First();
+                var sender = _Connections.Where(u => u.Id == senderId).First();
 
-                    var fromUser = _context.Users.FirstOrDefault(u => u.Id == sender.Id);
-                    var toUser = _context.Users.FirstOrDefault(u => u.Id == receiverName);
+                var fromUser = _context.Users.FirstOrDefault(u => u.Id == sender.Id);
+                var toUser = _context.Users.FirstOrDefault(u => u.Id == receiverName);
 
-                    await Leave(sender.CurrentRoom);
+                await Leave(sender.CurrentRoom);
 
-                    if (!string.IsNullOrEmpty(message.Trim()))
+                if (!string.IsNullOrEmpty(message.Trim()))
+                {
+                    var messageViewModel = new MessageViewModel()
                     {
-                        // Build the message
-                        var messageViewModel = new MessageViewModel()
-                        {
-                            Content = Regex.Replace(message, @"<.*?>", string.Empty),
-                            FromUserName = sender.UserName,
-                            FromFullName = sender.FullName,
-                            Avatar = sender.Avatar,
-                            Room = "",
-                            Timestamp = DateTime.Now
-                        };
+                        Content = Regex.Replace(message, @"<.*?>", string.Empty),
+                        FromUserName = sender.UserName,
+                        FromFullName = sender.FullName,
+                        Avatar = sender.Avatar,
+                        Room = "",
+                        Timestamp = DateTime.Now
+                    };
 
-                        var msg = new Message
-                        {
-                            Content = Regex.Replace(message, @"<.*?>", string.Empty),
-                            FromUserId = fromUser.Id,
-                            ToUserId = toUser.Id,
-                            Timestamp = DateTime.Now
-                        };
+                    var msg = new Message
+                    {
+                        Content = Regex.Replace(message, @"<.*?>", string.Empty),
+                        FromUserId = fromUser.Id,
+                        ToUserId = toUser.Id,
+                        Timestamp = DateTime.Now
+                    };
 
-                        await _context.Messages.AddAsync(msg);
-                        await _context.SaveChangesAsync();
+                    await _context.Messages.AddAsync(msg);
+                    await _context.SaveChangesAsync();
 
-                        // Send the message
-                        await Clients.Client(toUser.Id).SendAsync("newMessage", messageViewModel);
-                        await Clients.Caller.SendAsync("newMessage", messageViewModel);
-                    }
+                    await Clients.Client(toUser.Id).SendAsync("newMessage", messageViewModel);
+                    await Clients.Caller.SendAsync("newMessage", messageViewModel);
+                }
             }
             catch (Exception ex)
             {
@@ -124,7 +121,7 @@ namespace Chat.Web.Hubs
                     // Tell others to update their list of users
                     await Clients.OthersInGroup(destinatario.Id).SendAsync("addUser", Emissor);
 
-                   // await Clients.Client(connection).SendAsync("Receive", chat.from, chat.message);
+                    // await Clients.Client(connection).SendAsync("Receive", chat.from, chat.message);
                 }
             }
             catch (Exception ex)
@@ -153,9 +150,9 @@ namespace Chat.Web.Hubs
                 Avatar = user.Avatar,
                 UserName = user.UserName,
                 FullName = user.FullName,
-                Status =  GetStatus(user.Id),
+                Status = GetStatus(user.Id),
             }).ToList();
-         
+
             return userViewModel;
         }
 
@@ -218,7 +215,7 @@ namespace Chat.Web.Hubs
             return "Web";
         }
 
-        private  string GetStatus(string userId)
+        private string GetStatus(string userId)
            => _Connections.Exists(x => x.Id == userId) ? UserStatus.Disponivel : UserStatus.Indisponivel;
     }
 }

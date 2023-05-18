@@ -1,15 +1,11 @@
 ﻿$(document).ready(function () {
     var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
 
-    var x;
+    var id;
 
     $('ul#users-list').on('click', 'li', function () {
-
-  
-        x = $('.user-info').attr('id')
-
+        id = $(this).find('.user-info').attr('id');
     });
-
 
     connection.start().then(function () {
         console.log('SignalR Started...')
@@ -127,7 +123,7 @@
             var text = self.message();
             if (text.startsWith("/")) {
                 var sender = $('.senderId').attr('id');;
-                var receiver = x;
+                var receiver = id;
                 var message = text.substring(text.indexOf(")") + 1, text.length);
                 self.sendPrivate(sender, receiver, message);
                 self.messageHistoryPrivate()
