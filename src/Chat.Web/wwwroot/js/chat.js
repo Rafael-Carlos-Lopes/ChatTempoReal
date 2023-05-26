@@ -12,6 +12,7 @@
         viewModel.roomList();
         viewModel.userList();
         viewModel.RegistredUserList();
+        viewModel.RegistredUserListStatus();
     }).catch(function (err) {
         return console.error(err);
     });
@@ -202,9 +203,22 @@
                         result[i].userName,
                         result[i].fullName,
                         result[i].avatar,
-                        result[i].currentRoom,
-                        result[i].status
+                        result[i].currentRoom
                     ))
+                }
+            });
+        }
+
+        self.RegistredUserListStatus = function () {
+            connection.invoke("GeRegistredUsers").then(function (result) {
+                for (var i = 0; i < result.length; i++) {
+                    $('ul#users-list li div[id=' + result[i].id + '] + div').css({
+                        'opacity': '1',
+                        'width': '10px',
+                        'height': '10px',
+                        'border-radius': '50%',
+                        'background-color': result[i].status
+                    });
                 }
             });
         }
@@ -369,27 +383,15 @@
         self.device = ko.observable(device);
     }
 
-    function UserChat(id, userName, fullName, avatar, currentRoom, statuscor) {
+    function UserChat(id, userName, fullName, avatar, currentRoom) {
         var self = this;
         self.id = ko.observable(id);
         self.userName = ko.observable(userName);
         self.fullName = ko.observable(fullName);
         self.avatar = ko.observable(avatar);
         self.currentRoom = ko.observable(currentRoom);
-
-
-     
-
-        $('ul#users-list li .status').css({
-            'opacity': '1',
-            'width': '10px',
-            'height': '10px',
-            'border-radius': '50%',
-            'background-color': statuscor
-        });
      
     }
-
 
     function ChatMessage(id, content, timestamp, fromUserName, fromFullName, isMine, avatar) {
         var self = this;
