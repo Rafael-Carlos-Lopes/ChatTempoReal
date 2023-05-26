@@ -220,7 +220,13 @@
                         'background-color': result[i].status
                     });
                 }
+
+                setTimeout(viewModel.ChamaRegistredUserListStatus(), 3000);
             });
+        }
+
+        self.ChamaRegistredUserListStatus = function () {         
+            setTimeout(viewModel.RegistredUserListStatus(), 3000);
         }
 
 
