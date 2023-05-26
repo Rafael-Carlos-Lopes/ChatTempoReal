@@ -13,7 +13,7 @@
 </div>
 
 <div class="app d-none" data-bind="css: isLoading() ? 'd-none' : ''">
-    <div class="sidebar">
+    <div class="sidebar" style="background-color: #1F2C34;">
         <div class="header">
             <h5>Salas</h5>
             <div class="actions">
@@ -87,12 +87,12 @@
                     <div class="message-item" data-bind="css: { ismine: isMine() === true }">
                         <span class="avatar avatar-lg mx-2 text-uppercase" data-bind="visible: avatar() == null, text: fromFullName()[0]"></span>
                         <img class="avatar avatar-lg mx-2" data-bind="visible: avatar() != null, attr: { src: avatar() != null ? '/avatars/' + avatar() : '' }" />
-                        <div class="message-content">
+                        <div class="message-content" style="background-color: #1F2C34">
                             <div class="message-info d-flex flex-wrap align-items-center">
-                                <span class="author" data-bind="text: fromFullName"></span>
-                                <span class="timestamp" data-bind="text: timestampRelative, attr: { 'data-bs-title': timestampFull }" data-bs-toggle="tooltip" data-bs-placement="top"></span>
+                                <span class="author" style="color: white" data-bind="text: fromFullName"></span>
+                                <span class="timestamp" style="color: white" data-bind="text: timestampRelative, attr: { 'data-bs-title': timestampFull }" data-bs-toggle="tooltip" data-bs-placement="top"></span>
                             </div>
-                            <div class="content" data-bind="html: content"></div>
+                            <div class="content" data-bind="html: content" style="color: white"></div>
                         </div>
                         <div class="actions d-none">
                             <div class="dropdown dropstart">

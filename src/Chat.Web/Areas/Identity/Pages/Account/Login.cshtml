@@ -28,11 +28,13 @@
                 </div>
             </div>
             <div class="col-12 mt-3">
-                <button type="submit" class="btn btn-primary w-100">Entrar</button>
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #1F2C34;border-color: #1F2C34;">
+                    Entrar
+                </button>
             </div>
             <div class="col-12 mt-3">
                 @*<a class="d-inline-flex" asp-page="./ForgotPassword">Forgot your password?</a>*@
-                <a class="d-inline-flex" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Registrar novo usuário</a>
+                <a class="d-inline-flex" asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Cadastrar novo usuário</a>
             </div>
         </form>
     </div>

@@ -1,12 +1,12 @@
 ﻿@page
 @model RegisterModel
 @{
-    ViewData["Title"] = "Registrar novo usuário";
+    ViewData["Title"] = "Cadastrar novo usuário";
 }
 
-<div class="card" style="max-width: 400px;">
+<div class="card" style="max-width: 400px; border: 1px solid rgba(0,0,0,.125);">
     <div class="card-header" style="padding: 0.75rem 1.25rem;">
-        Registrar novo usuário
+        Cadastrar novo usuário
     </div>
     <div class="card-body" style="padding: 1em !important;">
         <form asp-route-returnUrl="@Model.ReturnUrl" method="post" class="row g-2">
@@ -37,7 +37,8 @@
                 <span asp-validation-for="Input.FullName" class="text-danger"></span>
             </div>
             <div class="col-12 mt-3">
-                <button type="submit" class="btn btn-primary w-100">Registrar</button>
+                <button type="submit" class="btn btn-primary w-100" style="background-color: #1F2C34;border-color: #1F2C34;">
+                    Cadastrar</button>
             </div>
             <div class="col-12 mt-3">
                 <a asp-page="./Login" asp-route-returnUrl="@Model.ReturnUrl">Já tem uma conta?</a>
