@@ -36,10 +36,10 @@ namespace Chat.Web.Hubs
             {
                 var sender = _Connections.Where(u => u.Id == senderId).First();
 
+                await Leave(sender.CurrentRoom);
+
                 var fromUser = _context.Users.FirstOrDefault(u => u.Id == sender.Id);
                 var toUser = _context.Users.FirstOrDefault(u => u.Id == receiverName);
-
-                await Leave(sender.CurrentRoom);
 
                 if (!string.IsNullOrEmpty(message.Trim()))
                 {

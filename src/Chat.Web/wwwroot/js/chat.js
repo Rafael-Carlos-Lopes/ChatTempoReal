@@ -369,13 +369,25 @@
         self.device = ko.observable(device);
     }
 
-    function UserChat(id, userName, fullName, avatar, currentRoom, device) {
+    function UserChat(id, userName, fullName, avatar, currentRoom, statuscor) {
         var self = this;
         self.id = ko.observable(id);
         self.userName = ko.observable(userName);
         self.fullName = ko.observable(fullName);
         self.avatar = ko.observable(avatar);
         self.currentRoom = ko.observable(currentRoom);
+
+
+     
+
+        $('ul#users-list li .status').css({
+            'opacity': '1',
+            'width': '10px',
+            'height': '10px',
+            'border-radius': '50%',
+            'background-color': statuscor
+        });
+     
     }
 
 

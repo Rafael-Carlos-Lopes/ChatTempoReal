@@ -20,7 +20,6 @@
 
 
 
-
     $('#emojis-container').on('click', 'button', function () {
         var emojiValue = $(this).data("value");
         var input = $('#message-input');
