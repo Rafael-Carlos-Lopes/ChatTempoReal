@@ -85,4 +85,9 @@
     $(document).on("hidden.bs.dropdown", ".actions .dropdown", function () {
         $(this).closest(".actions").addClass("d-none");
     });
+
+    $('.inputEmail').on("blur", function () {
+        $('span[id="Input_Email-error"]').getAttribute('innerHTML') = "Teste";
+        console.log('Teste email');
+    });
 });
