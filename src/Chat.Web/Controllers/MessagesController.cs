@@ -76,16 +76,21 @@ namespace Chat.Web.Controllers
         public IActionResult GetPrivateMessages(string userId )
         {
             var fromUser = _context.Users.FirstOrDefault(u => u.UserName == User.Identity.Name);
-            var toUser = _context.Users.FirstOrDefault(u => u.Id == userId); ;
-            
-            var messages = _context.Messages.Where(m => m.FromUserId == fromUser.Id && m.ToUserId == userId)
-                .OrderByDescending(m => m.Timestamp)
+            var toUser = _context.Users.FirstOrDefault(u => u.Id == userId);
+
+            var toUserMessages = _context.Messages.Where(m => m.FromUserId == fromUser.Id && m.ToUserId == userId).ToList();
+            var fromUserMessages = _context.Messages.Where(m => m.FromUserId == userId && m.ToUserId == fromUser.Id).ToList();
+
+            var messages = toUserMessages.Concat(fromUserMessages);
+
+
+            var allmessage = messages.OrderByDescending(m => m.Timestamp)
                 .Take(20)
                 .AsEnumerable()
                 .Reverse()
                 .ToList();
 
-            var messagesViewModel = _mapper.Map<IEnumerable<Message>, IEnumerable<MessageViewModel>>(messages);
+            var messagesViewModel = _mapper.Map<IEnumerable<Message>, IEnumerable<MessageViewModel>>(allmessage);
 
             return Ok(messagesViewModel);
         }
