@@ -9,7 +9,7 @@
             text = text.split(")")[1];
         }
 
-        text = "/private(" + username + ") " + text.trim();
+        text = "/(" + username + ") " + text.trim();
         input.val(text);
         input.change();
         input.focus();
