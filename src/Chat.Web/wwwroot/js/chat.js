@@ -221,7 +221,7 @@
                     });
                 }
 
-                setTimeout(viewModel.ChamaRegistredUserListStatus(), 3000);
+                //setTimeout(viewModel.ChamaRegistredUserListStatus(), 3000);
             });
         }
 

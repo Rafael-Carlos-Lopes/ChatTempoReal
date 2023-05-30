@@ -47,12 +47,12 @@ namespace Chat.Web.Areas.Identity.Pages.Account
         public class InputModel
         {
             [Required]
-            [StringLength(100, ErrorMessage = "O {0} precisa ter no mínimo {2} e no máximo {1} caracteres.", MinimumLength = 1)]
+            [StringLength(100, ErrorMessage = "O {0} precisa ter no mínimo {2} e no máximo {1} caracteres.", MinimumLength = 2)]
             [Display(Name = "Nome Completo")]
             public string FullName { get; set; }
 
             [Required]
-            [StringLength(100, ErrorMessage = "O {0} precisa ter no mínimo {2} e no máximo {1} caracteres.", MinimumLength = 1)]
+            [StringLength(100, ErrorMessage = "O {0} precisa ter no mínimo {2} e no máximo {1} caracteres.", MinimumLength = 2)]
             [Display(Name = "Usuário")]
             public string UserName { get; set; }
 
