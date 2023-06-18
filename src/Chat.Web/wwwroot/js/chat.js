@@ -127,7 +127,7 @@
                 var receiver = id;
                 var message = text.substring(text.indexOf(")") + 1, text.length);
                 self.sendPrivate(sender, receiver, message);
-                self.messageHistoryPrivate()
+                self.messageHistoryPrivate();
             }
             else {
                 self.sendToRoom(self.joinedRoom(), self.message());
@@ -158,7 +158,7 @@
 
 
         self.sendPrivate = function (sender, receiver, message) {
-                connection.invoke("SendPrivate", sender, receiver, message.trim());
+            connection.invoke("SendPrivate", sender, receiver, message.trim());
         }
 
         self.joinRoom = function (room) {
@@ -221,11 +221,11 @@
                     });
                 }
 
-                //setTimeout(viewModel.ChamaRegistredUserListStatus(), 3000);
+                setTimeout(viewModel.ChamaRegistredUserListStatus(), 3000);
             });
         }
 
-        self.ChamaRegistredUserListStatus = function () {         
+        self.ChamaRegistredUserListStatus = function () {
             setTimeout(viewModel.RegistredUserListStatus(), 3000);
         }
 

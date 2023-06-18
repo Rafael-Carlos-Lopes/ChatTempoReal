@@ -1,7 +1,7 @@
 ﻿$(function () {
 
     $(document).ready(function () {
-        let repetir = setInterval(changeErrorText, 50);
+        let repetir = setInterval(changeErrorText, 20);
     });
 });
 
